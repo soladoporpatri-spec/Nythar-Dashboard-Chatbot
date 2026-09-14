@@ -1,4 +1,4 @@
-# Nythar - Dashboard & Chatbot 🤖📊
+# Barbearia - Dashboard & Chatbot 🤖📊
 
 <div align="center">
   <em>Um sistema completo de agendamento e gerenciamento SaaS com integração oficial WhatsApp e painel administrativo em tempo real.</em>
@@ -7,11 +7,11 @@
 ---
 
 ### 🚀 Sobre o Projeto
-O **Nythar** é uma solução de software SaaS B2B criada para modernizar negócios locais. Ele centraliza as operações diárias, unindo em uma única plataforma a agenda, gestão de clientes (CRM), serviços prestados, relatórios financeiros e automação de atendimento inteligente via **chatbot de WhatsApp**.
+O **Barbearia** é uma solução de software SaaS B2B criada para modernizar negócios locais. Ele centraliza as operações diárias, unindo em uma única plataforma a agenda, gestão de clientes (CRM), serviços prestados, relatórios financeiros e automação de atendimento inteligente via **chatbot de WhatsApp**.
 
 O fluxo é integrado: o cliente agenda pelo WhatsApp de forma autônoma 24/7 e a equipe administrativa acompanha, aprova ou ajusta as reservas em tempo real através da Dashboard local.
 
-🔗 **[Acessar a Landing Page](https://soladoporpatri-spec.github.io/Nythar-Dashboard-Chatbot/)** | 🔗 **[Ver a Dashboard em modo Demonstração](https://soladoporpatri-spec.github.io/Nythar-Dashboard-Chatbot/demo/)**
+🔗 **[Acessar a Landing Page](https://soladoporpatri-spec.github.io/Barbearia-Dashboard-Chatbot/)** | 🔗 **[Ver a Dashboard em modo Demonstração](https://soladoporpatri-spec.github.io/Barbearia-Dashboard-Chatbot/demo/)**
 
 ---
 

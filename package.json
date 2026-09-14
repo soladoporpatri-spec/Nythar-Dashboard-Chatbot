@@ -1,11 +1,11 @@
 {
-  "name": "nythar-dashboard",
+  "name": "Barbearia-dashboard",
   "version": "2.0.0",
   "description": "Projeto de dashboard e chatbot para negócios locais, com agenda, clientes, serviços e atendimento pelo WhatsApp",
-  "main": "api-nythar.js",
+  "main": "api.js",
   "scripts": {
-    "start": "node api-nythar.js",
-    "dev": "nodemon api-nythar.js",
+    "start": "node api.js",
+    "dev": "nodemon api.js",
     "supervise": "node scripts/supervisor.js",
     "smoke:local": "node scripts/local-smoke.js",
     "test": "node --test tests/*.test.js",
