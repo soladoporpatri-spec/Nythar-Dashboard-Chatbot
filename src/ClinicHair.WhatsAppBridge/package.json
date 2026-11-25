@@ -1,0 +1,22 @@
+{
+  "name": "clinichair-whatsapp-bridge",
+  "version": "1.0.0",
+  "description": "Microservice TypeScript (@whiskeysockets/baileys) para Enquetes Nativas do WhatsApp integrado ao Backend C# .NET 10 da Clinic Hair",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "pino": "^9.6.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "@types/qrcode": "^1.5.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

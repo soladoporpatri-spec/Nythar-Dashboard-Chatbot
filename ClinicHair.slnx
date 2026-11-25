@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ClinicHair.WebApi/ClinicHair.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ClinicHair.Tests/ClinicHair.Tests.csproj" />
+  </Folder>
+</Solution>

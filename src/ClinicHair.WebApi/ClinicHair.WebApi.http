@@ -1,0 +1,85 @@
+@baseUrl = http://localhost:5150
+
+### 1. Login como Administrador Itamar (Clinic Hair)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "Itamar",
+  "password": "311208"
+}
+
+### 2. Listar Agendamentos (Aba Agenda)
+GET {{baseUrl}}/api/dashboard/appointments
+
+### 3. Criar Agendamento Manual (Respeita expediente e limite de 3 por hora)
+POST {{baseUrl}}/api/dashboard/appointments
+Content-Type: application/json
+
+{
+  "customerName": "Carlos Eduardo",
+  "customerPhone": "5511998887766",
+  "barberId": 1,
+  "serviceItemId": 1,
+  "appointmentDate": "2026-11-12",
+  "startTime": "10:00",
+  "notes": "Agendamento manual pela Dashboard"
+}
+
+### 4. Consultar Resumo do Calendário Mensal
+GET {{baseUrl}}/api/dashboard/calendar?year=2026&month=11
+
+### 5. Alternar Dia de Não Funcionamento (Amarelo no Calendário)
+POST {{baseUrl}}/api/dashboard/calendar/non-working-day
+Content-Type: application/json
+
+{
+  "date": "2026-11-20",
+  "reason": "Feriado Dia da Consciência Negra"
+}
+
+### 6. Listar Clientes do CRM
+GET {{baseUrl}}/api/dashboard/crm/customers
+
+### 7. Listar Avaliações de um Cliente Específico (Botão Azul Escuro)
+GET {{baseUrl}}/api/dashboard/crm/customers/1/evaluations
+
+### 8. Listar Todas as Avaliações Anônimas (Sub-aba Avaliações)
+GET {{baseUrl}}/api/dashboard/crm/evaluations-anonymous
+
+### 9. Consultar Relatórios Gerenciais
+GET {{baseUrl}}/api/dashboard/reports
+
+### 10. Exportar Planilha Excel (.xlsx)
+GET {{baseUrl}}/api/dashboard/reports/export/excel
+
+### 11. Exportar Google Sheets (.csv)
+GET {{baseUrl}}/api/dashboard/reports/export/google-sheets
+
+### 12. Listar Funcionários e Horários Individuais
+GET {{baseUrl}}/api/dashboard/store/barbers
+
+### 13. Listar Produtos e Serviços (Corte R$ 30, Barba R$ 30, Corte+Barba R$ 50, Sobrancelha R$ 15)
+GET {{baseUrl}}/api/dashboard/store/services
+
+### 14. Consultar Configurações da Loja e Templates de Enquetes
+GET {{baseUrl}}/api/dashboard/store/settings
+
+### 15. Status do Bridge WhatsApp
+GET {{baseUrl}}/api/dashboard/whatsapp/status
+
+### 16. Webhook do Bridge TypeScript Baileys -> API C# (Simulando mensagem inicial do cliente)
+POST {{baseUrl}}/api/whatsapp/webhook
+Content-Type: application/json
+X-Bridge-Secret: ClinicHair@BridgeHmacSecret2026!
+
+{
+  "eventId": "evt_test_welcome_001",
+  "eventType": "message.text",
+  "senderJid": "5511991234501@s.whatsapp.net",
+  "textMessage": "Olá"
+}
+
+### 17. Simulador Interativo do Bot de Enquetes (Consultar Estado)
+GET {{baseUrl}}/api/dashboard/whatsapp/simulator/5511991234501
+

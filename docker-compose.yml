@@ -1,0 +1,60 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: clinichair-mysql-lts
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ClinicHair@Root2026!
+      MYSQL_DATABASE: clinichair_db
+      MYSQL_USER: clinichair_app
+      MYSQL_PASSWORD: ClinicHair@App2026!
+      TZ: America/Sao_Paulo
+    ports:
+      - "3306:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=-03:00
+      - --innodb-buffer-pool-size=256M
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Perfil "full" (item 91): sobe painel + bridge em contêineres.
+  #   docker compose --profile full up -d --build
+  # Sem o perfil, "docker compose up" continua subindo só o MySQL, como antes.
+  # Os segredos vêm do arquivo .env ao lado deste (veja .env.example); nada fica gravado aqui.
+  webapi:
+    profiles: ["full"]
+    build: ./src/ClinicHair.WebApi
+    container_name: clinichair-webapi
+    restart: unless-stopped
+    depends_on: [mysql]
+    environment:
+      TZ: America/Sao_Paulo
+      CLINICHAIR_STORAGE_ROOT: /data
+      WhatsAppBridge__BaseUrl: http://bridge:3100
+      WhatsAppBridge__SharedSecret: ${BRIDGE_SHARED_SECRET:-}
+      Jwt__SecretKey: ${JWT_KEY:-}
+      CLINICHAIR_JSON_LOGS: "1"
+    ports:
+      - "5150:5150"
+    volumes:
+      - webapi_data:/data
+
+  bridge:
+    profiles: ["full"]
+    build: ./src/ClinicHair.WhatsAppBridge
+    container_name: clinichair-bridge
+    restart: unless-stopped
+    environment:
+      TZ: America/Sao_Paulo
+      BRIDGE_PORT: "3100"
+      CSHARP_WEBHOOK_URL: http://webapi:5150/api/whatsapp/webhook
+      BRIDGE_SHARED_SECRET: ${BRIDGE_SHARED_SECRET:-}
+    volumes:
+      - bridge_auth:/app/storage
+
+volumes:
+  mysql_data:
+  webapi_data:
+  bridge_auth:

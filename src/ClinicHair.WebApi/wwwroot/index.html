@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ea580c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Clinic Hair">
+  <title>Clinic Hair — Gestão</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/app-192.png">
+  <link rel="apple-touch-icon" href="/icons/app-192.png">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/ext.css">
+  <script type="module" src="/js/polyfills.js"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       TELA DE LOGIN
+       ======================================================================== -->
+  <main id="login-screen" class="login-screen">
+    <section class="login-card" aria-labelledby="login-heading">
+      <div class="login-brand">
+        <div class="login-brand-badge">CH</div>
+        <div>
+          <h1 id="login-heading">Clinic Hair</h1>
+        </div>
+      </div>
+
+      <form id="login-form">
+        <div class="field">
+          <label for="login-username">Administrador</label>
+          <input id="login-username" name="username" type="text" required autocomplete="username">
+        </div>
+        <div class="field">
+          <label for="login-password">Senha</label>
+          <input id="login-password" name="password" type="password" required autocomplete="current-password">
+        </div>
+        <p id="login-error" style="color: #dc2626; font-size: 13px; font-weight: 600;" hidden></p>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 6px;">
+          Entrar
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       SHELL PRINCIPAL DA DASHBOARD CLINIC HAIR
+       ======================================================================== -->
+  <div id="app-shell" class="app-shell" hidden>
+    <!-- SIDEBAR VERTICAL À ESQUERDA NO DESKTOP / TOPO + BARRA INFERIOR NO MOBILE -->
+    <aside class="app-sidebar">
+      <div class="sidebar-top">
+        <div class="store-identity-row">
+          <div class="store-identity">
+            <div class="store-logo">CH</div>
+            <p class="store-title" id="header-store-name">Clinic Hair</p>
+          </div>
+
+          <div class="header-QuickActions">
+            <button type="button" id="btn-sound-toggle" class="icon-action-btn" title="Som de Notificações Ativo" aria-label="Alternar som de notificações">
+              <span id="sound-toggle-icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></span>
+            </button>
+            <button type="button" id="btn-open-notifications" class="icon-action-btn" title="Central de Notificações" aria-label="Abrir Central de Notificações">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+              <span id="notif-unread-badge" class="notif-badge" hidden>0</span>
+            </button>
+            <button type="button" id="install-app" class="btn-install-app" hidden>
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg> Instalar App
+            </button>
+            <button type="button" id="btn-open-pwa-guide" class="icon-action-btn" title="Baixar App na Tela Principal do Celular" aria-label="Como instalar na tela inicial do celular">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg> <span class="action-btn-text">App</span>
+            </button>
+            <button type="button" id="btn-mobile-logout" class="icon-action-btn mobile-only-btn" title="Sair da conta" aria-label="Sair">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair
+            </button>
+          </div>
+        </div>
+
+        <nav class="main-nav" aria-label="Navegação principal">
+          <button type="button" class="nav-btn" id="nav-btn-superadmin" data-section="superadmin" hidden>
+            <span class="nav-icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg></span>
+            <span class="nav-label">SuperAdmin</span>
+          </button>
+          <button type="button" class="nav-btn" data-section="agenda" aria-current="page">
+            <span class="nav-icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></span>
+            <span class="nav-label">Agenda</span>
+          </button>
+          <button type="button" class="nav-btn" data-section="crm">
+            <span class="nav-icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span class="nav-label">CRM</span>
+          </button>
+          <button type="button" class="nav-btn" data-section="relatorios">
+            <span class="nav-icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
+            <span class="nav-label">Relatórios</span>
+          </button>
+          <button type="button" class="nav-btn" data-section="loja">
+            <span class="nav-icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg></span>
+            <span class="nav-label">Loja</span>
+          </button>
+          <button type="button" class="nav-btn" data-section="whatsapp">
+            <span class="nav-icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            <span class="nav-label">WhatsApp</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <span class="admin-badge" id="header-admin-name"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Itamar</span>
+        <button type="button" id="btn-logout" class="btn btn-secondary" style="min-height: 34px; padding: 4px 10px; font-size: 12px;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair
+        </button>
+      </div>
+    </aside>
+
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+    <div class="app-main">
+      <!-- Barra de contexto quando o SuperAdmin (Patricio) está inspecionando/operando uma loja específica -->
+      <div id="superadmin-impersonate-banner" class="sa-impersonate-banner" hidden>
+        <div class="sa-impersonate-info">
+          <span class="sa-crown-pill"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg> SuperAdmin</span>
+          <span id="sa-impersonate-text">Visualizando painel operacional da loja: <strong>Clinic Hair</strong></span>
+        </div>
+        <button type="button" id="btn-sa-return-overview" class="btn btn-secondary" style="min-height: 32px; padding: 4px 12px; font-size: 12.5px;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> Voltar ao Painel SuperAdmin
+        </button>
+      </div>
+
+      <!-- ====================================================================
+           SEÇÃO 0: SUPERADMINISTRADOR (PATRICIO)
+           Sub-abas centralizadas no topo: Lojas & Pré-Config | Resumo Financeiro | Assinaturas | Logs do Sistema
+           ==================================================================== -->
+      <section id="section-superadmin" class="main-section" hidden>
+        <div class="subtab-header-zone">
+          <div class="subtab-bar" role="tablist" aria-label="Sub-abas do SuperAdministrador">
+            <button type="button" role="tab" id="tab-sa-stores" class="subtab-btn" aria-selected="true" data-subpanel="panel-sa-stores">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg> Lojas &amp; Pré-Config
+            </button>
+            <button type="button" role="tab" id="tab-sa-financial" class="subtab-btn" aria-selected="false" data-subpanel="panel-sa-financial">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg> Resumo Financeiro
+            </button>
+            <button type="button" role="tab" id="tab-sa-billing" class="subtab-btn" aria-selected="false" data-subpanel="panel-sa-billing">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> Assinaturas
+            </button>
+            <button type="button" role="tab" id="tab-sa-logs" class="subtab-btn" aria-selected="false" data-subpanel="panel-sa-logs">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg> Logs Diretos
+            </button>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 0A: TODAS AS LOJAS, CRIAÇÃO DE LOJA E ENTREGA DE PRÉ-CONFIGURAÇÃO -->
+        <div id="panel-sa-stores" role="tabpanel" aria-labelledby="tab-sa-stores">
+          <div class="panel-inner">
+            <div class="section-toolbar">
+              <div class="toolbar-group">
+                <strong style="font-size: 15px;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg> Gestão Multi-Lojas &amp; Pré-Configuração</strong>
+                <span id="sa-stores-summary-pills" style="display: inline-flex; gap: 6px; flex-wrap: wrap;"></span>
+              </div>
+              <div class="toolbar-group">
+                <button type="button" id="btn-sa-refresh-overview" class="btn btn-secondary" style="min-height: 36px;">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg> Atualizar
+                </button>
+                <button type="button" id="btn-sa-open-create-store" class="btn btn-primary" style="min-height: 36px;">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Criar Loja + Pré-Configuração
+                </button>
+              </div>
+            </div>
+
+            <div id="sa-stores-grid" class="sa-stores-grid"></div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 0B: RESUMO FINANCEIRO DAS LOJAS (MRR SaaS + GMV OPERACIONAL DE CADA LOJA) -->
+        <div id="panel-sa-financial" role="tabpanel" aria-labelledby="tab-sa-financial" hidden>
+          <div class="panel-inner">
+            <div class="section-toolbar">
+              <div>
+                <strong style="font-size: 15px;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg> Resumo Financeiro Global (SaaS &amp; Operação das Lojas)</strong>
+                <p style="margin: 2px 0 0; font-size: 12.5px; color: var(--text-secondary);">
+                  Acompanhe o faturamento de assinaturas (MRR) e o desempenho financeiro de agendamentos de cada unidade.
+                </p>
+              </div>
+              <button type="button" id="btn-sa-QuickCharge-from-fin" class="btn btn-primary" style="min-height: 36px;">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> Cobrar Assinatura de Loja
+              </button>
+            </div>
+
+            <div id="sa-financial-kpis" class="kpi-grid"></div>
+
+            <div class="surface-card">
+              <h3>Comparativo Financeiro por Loja Registrada</h3>
+              <div id="sa-financial-table-container" class="sa-table-scroll"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 0C: COBRANÇA DE ASSINATURAS DAS LOJAS -->
+        <div id="panel-sa-billing" role="tabpanel" aria-labelledby="tab-sa-billing" hidden>
+          <div class="panel-inner">
+            <div class="section-toolbar">
+              <div class="toolbar-group">
+                <strong style="font-size: 15px;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> Cobranças e Assinaturas SaaS</strong>
+                <select id="sa-billing-store-filter" style="min-height: 36px; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border-strong); font-size: 13px;">
+                  <option value="">Todas as Lojas</option>
+                </select>
+              </div>
+              <button type="button" id="btn-sa-open-charge-modal" class="btn btn-primary" style="min-height: 36px;">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Gerar Cobrança de Assinatura
+              </button>
+            </div>
+
+            <div id="sa-billing-list-container" class="surface-card"></div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 0D: ACESSO DIRETO AOS LOGS DO SISTEMA -->
+        <div id="panel-sa-logs" role="tabpanel" aria-labelledby="tab-sa-logs" hidden>
+          <div class="panel-inner">
+            <div class="section-toolbar">
+              <div class="toolbar-group">
+                <strong style="font-size: 15px;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg> Console de Logs Diretos do Sistema</strong>
+                <select id="sa-log-level-filter" style="min-height: 34px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border-strong); font-size: 12.5px;">
+                  <option value="ALL">Todos os Níveis</option>
+                  <option value="SECURITY">SECURITY (Acessos)</option>
+                  <option value="STORE">STORE (Lojas & Pré-Config)</option>
+                  <option value="BILLING">BILLING (Assinaturas)</option>
+                  <option value="WHATSAPP">WHATSAPP (Bridge & Mensagens)</option>
+                  <option value="INFO">INFO</option>
+                  <option value="WARN">WARN</option>
+                  <option value="ERROR">ERROR</option>
+                </select>
+                <select id="sa-log-store-filter" style="min-height: 34px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border-strong); font-size: 12.5px;">
+                  <option value="">Todas as Lojas</option>
+                </select>
+                <input type="search" id="sa-log-search" placeholder="Filtrar texto no log..." style="min-height: 34px; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border-strong); font-size: 12.5px; min-width: 180px;">
+              </div>
+              <div class="toolbar-group">
+                <button type="button" id="btn-sa-refresh-logs" class="btn btn-secondary" style="min-height: 34px; font-size: 12.5px;">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg> Atualizar
+                </button>
+                <a href="/api/superadmin/logs/export" id="btn-sa-export-logs" class="btn btn-success" style="min-height: 34px; font-size: 12.5px; text-decoration: none;">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Baixar .log
+                </a>
+                <button type="button" id="btn-sa-clear-logs" class="btn btn-danger" style="min-height: 34px; font-size: 12.5px;">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg> Limpar
+                </button>
+              </div>
+            </div>
+
+            <div id="sa-logs-terminal" class="sa-logs-terminal" role="log" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
+      <!-- ====================================================================
+           SEÇÃO 1: AGENDA (Sub-abas centralizadas no topo: Agenda | Calendário)
+           ==================================================================== -->
+      <section id="section-agenda" class="main-section">
+        <div class="subtab-header-zone">
+          <div class="subtab-bar" role="tablist" aria-label="Sub-abas da Agenda">
+            <button type="button" role="tab" id="tab-agenda-list" class="subtab-btn" aria-selected="true" data-subpanel="panel-agenda-list">
+              Agenda
+            </button>
+            <button type="button" role="tab" id="tab-agenda-calendar" class="subtab-btn" aria-selected="false" data-subpanel="panel-agenda-calendar">
+              Calendário
+            </button>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 1A: LISTA DE AGENDAMENTOS -->
+        <div id="panel-agenda-list" role="tabpanel" aria-labelledby="tab-agenda-list">
+          <div class="panel-inner">
+            <div class="section-toolbar">
+              <div class="toolbar-group">
+                <label for="agenda-filter-date" style="font-size: 13px; font-weight: 700;">Data:</label>
+                <input type="date" id="agenda-filter-date" style="min-height: 36px; padding: 4px 10px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                <button type="button" id="btn-agenda-show-all" class="btn btn-secondary" style="min-height: 36px; padding: 4px 12px;">
+                  Hoje
+                </button>
+              </div>
+              <div class="toolbar-group">
+                <button type="button" id="btn-open-manual-appt" class="btn btn-primary" style="min-height: 36px;">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Novo Agendamento
+                </button>
+              </div>
+            </div>
+
+            <div id="agenda-cards-container" class="agenda-list"></div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 1B: CALENDÁRIO -->
+        <div id="panel-agenda-calendar" role="tabpanel" aria-labelledby="tab-agenda-calendar" hidden>
+          <div class="panel-inner">
+            <div class="section-toolbar">
+              <div class="toolbar-group">
+                <button type="button" id="btn-cal-prev" class="btn btn-secondary">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg> Anterior
+                </button>
+                <strong id="calendar-month-label" style="font-size: 16px; min-width: 155px; text-align: center;"></strong>
+                <button type="button" id="btn-cal-next" class="btn btn-secondary">
+                  Próximo <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+              <div class="calendar-legend">
+                <span class="legend-item">
+                  <span class="legend-swatch" style="background: #dc2626;"></span>
+                  Com Agendamentos
+                </span>
+                <span class="legend-item">
+                  <span class="legend-swatch" style="background: #facc15;"></span>
+                  Não Funcionamento
+                </span>
+              </div>
+            </div>
+
+            <div class="calendar-grid-header">
+              <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+            </div>
+            <div id="calendar-grid-container" class="calendar-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SEÇÃO 2: CRM (Sub-abas centralizadas no topo: Clientes | Avaliações)
+           ==================================================================== -->
+      <section id="section-crm" class="main-section" hidden>
+        <div class="subtab-header-zone">
+          <div class="subtab-bar" role="tablist" aria-label="Sub-abas do CRM">
+            <button type="button" role="tab" id="tab-crm-customers" class="subtab-btn" aria-selected="true" data-subpanel="panel-crm-customers">
+              Clientes
+            </button>
+            <button type="button" role="tab" id="tab-crm-evaluations" class="subtab-btn" aria-selected="false" data-subpanel="panel-crm-evaluations">
+              Avaliações
+            </button>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 2A: CLIENTES DO CRM -->
+        <div id="panel-crm-customers" role="tabpanel" aria-labelledby="tab-crm-customers">
+          <div class="panel-inner">
+            <div id="crm-customers-container" class="crm-grid"></div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 2B: AVALIAÇÕES -->
+        <div id="panel-crm-evaluations" role="tabpanel" aria-labelledby="tab-crm-evaluations" hidden>
+          <div class="panel-inner">
+            <div class="section-toolbar">
+              <div class="toolbar-group">
+                <strong style="font-size: 14px;">Filtrar:</strong>
+                <button type="button" class="btn btn-secondary eval-filter-btn" data-eval-filter="all" style="min-height: 34px; padding: 4px 12px;">
+                  Todas
+                </button>
+                <button type="button" class="btn-eval-positive eval-filter-btn" data-eval-filter="Positive">
+                  Positivo
+                </button>
+                <button type="button" class="btn-eval-negative eval-filter-btn" data-eval-filter="Negative">
+                  Negativo
+                </button>
+                <span id="storage-stats-text" style="font-size: 12px; color: var(--text-secondary);"></span>
+              </div>
+              <button type="button" id="btn-run-storage-cleanup" class="btn btn-secondary" style="min-height: 34px; font-size: 12.5px;">
+                Otimizar Espaço (.txt)
+              </button>
+            </div>
+
+            <div id="anonymous-evaluations-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SEÇÃO 3: RELATÓRIOS
+           ==================================================================== -->
+      <section id="section-relatorios" class="main-section" hidden>
+        <div class="panel-inner" style="padding-top: 20px;">
+          <div class="section-toolbar">
+            <strong style="font-size: 15px;">Relatórios e Financeiro</strong>
+            <div class="toolbar-group">
+              <a href="/api/dashboard/reports/export/excel" class="btn btn-success" style="text-decoration: none;">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></svg> Exportar Excel (.xlsx)
+              </a>
+              <a href="/api/dashboard/reports/export/google-sheets" class="btn btn-primary" style="text-decoration: none;">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> Exportar Google Sheets (.csv)
+              </a>
+            </div>
+          </div>
+
+          <div id="reports-kpi-container" class="kpi-grid"></div>
+
+          <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+            <div class="surface-card">
+              <h3>Desempenho por Barbeiro</h3>
+              <div id="reports-barbers-container"></div>
+            </div>
+
+            <div class="surface-card">
+              <h3>Fechamento por Meio de Pagamento</h3>
+              <div id="reports-payments-container"></div>
+            </div>
+
+            <div class="surface-card">
+              <h3>Horários de Pico</h3>
+              <div id="reports-hours-container"></div>
+            </div>
+          </div>
+
+          <div class="surface-card">
+            <h3>Faturamento por Serviço (R$)</h3>
+            <div id="reports-services-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SEÇÃO 4: LOJA (Funcionários | Produtos/Serviços | Configurações)
+           ==================================================================== -->
+      <section id="section-loja" class="main-section" hidden>
+        <div class="subtab-header-zone">
+          <div class="subtab-bar" role="tablist" aria-label="Sub-abas da Loja">
+            <button type="button" role="tab" id="tab-loja-barbers" class="subtab-btn" aria-selected="true" data-subpanel="panel-loja-barbers">
+              Funcionários
+            </button>
+            <button type="button" role="tab" id="tab-loja-services" class="subtab-btn" aria-selected="false" data-subpanel="panel-loja-services">
+              Produtos / Serviços
+            </button>
+            <button type="button" role="tab" id="tab-loja-settings" class="subtab-btn" aria-selected="false" data-subpanel="panel-loja-settings">
+              Configurações da Loja
+            </button>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 4A: FUNCIONÁRIOS -->
+        <div id="panel-loja-barbers" role="tabpanel" aria-labelledby="tab-loja-barbers">
+          <div class="panel-inner">
+            <div class="section-toolbar">
+              <strong>Funcionários</strong>
+              <button type="button" id="btn-new-barber" class="btn btn-primary">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Registrar Funcionário
+              </button>
+            </div>
+            <div id="store-barbers-container" class="crm-grid"></div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 4B: PRODUTOS / SERVIÇOS -->
+        <div id="panel-loja-services" role="tabpanel" aria-labelledby="tab-loja-services" hidden>
+          <div class="panel-inner">
+            <div class="section-toolbar">
+              <strong>Produtos e Serviços</strong>
+              <button type="button" id="btn-new-service" class="btn btn-primary">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Novo Produto / Serviço
+              </button>
+            </div>
+            <div id="store-services-container" class="crm-grid"></div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 4C: CONFIGURAÇÕES DA LOJA -->
+        <div id="panel-loja-settings" role="tabpanel" aria-labelledby="tab-loja-settings" hidden>
+          <div class="panel-inner">
+            <form id="store-settings-form" class="surface-card">
+              <h3>Horário de Funcionamento Geral</h3>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="cfg-store-name">Nome da Loja</label>
+                  <input id="cfg-store-name" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-open-time">Abertura</label>
+                  <input id="cfg-open-time" type="time" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-close-time">Fechamento</label>
+                  <input id="cfg-close-time" type="time" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-retention-days">Limpeza Automática de .txt (Dias)</label>
+                  <input id="cfg-retention-days" type="number" min="1" max="365" required>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 18px;">Mensagens das Enquetes</h3>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="cfg-poll-welcome">Enquete Inicial</label>
+                  <input id="cfg-poll-welcome" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-poll-service">Enquete de Serviços</label>
+                  <input id="cfg-poll-service" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-poll-barber">Enquete de Profissional</label>
+                  <input id="cfg-poll-barber" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-poll-date">Enquete de Dia</label>
+                  <input id="cfg-poll-date" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-poll-time">Enquete de Hora</label>
+                  <input id="cfg-poll-time" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-ask-today">Pergunta de Nome (Hoje)</label>
+                  <input id="cfg-ask-today" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-ask-other">Pergunta de Nome (Outro Dia)</label>
+                  <input id="cfg-ask-other" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-poll-confirm">Enquete de Confirmação</label>
+                  <input id="cfg-poll-confirm" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-msg-confirmed">Mensagem de Confirmação</label>
+                  <input id="cfg-msg-confirmed" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-msg-reminder">Lembrete (1 Hora Antes)</label>
+                  <input id="cfg-msg-reminder" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-poll-eval">Enquete de Avaliação (2 Horas Depois)</label>
+                  <input id="cfg-poll-eval" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="cfg-msg-eval-open">Mensagem de Início da Avaliação</label>
+                  <input id="cfg-msg-eval-open" type="text" required>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SEÇÃO 5: WHATSAPP
+           ==================================================================== -->
+      <section id="section-whatsapp" class="main-section" hidden>
+        <div class="panel-inner" style="padding-top: 20px;">
+          <div class="surface-card">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+              <div>
+                <h3 style="margin: 0;">Vincular Aparelho WhatsApp</h3>
+                <p style="margin: 4px 0 0; font-size: 13px; color: var(--text-secondary);">
+                  Escolha abaixo se prefere conectar lendo o <strong>QR Code</strong> ou digitando o <strong>Número com Código de 8 Dígitos</strong>.
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" id="btn-wa-bot-toggle" class="btn btn-warning" aria-pressed="false">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                  <span id="btn-wa-bot-toggle-label">Pausar Bot</span>
+                </button>
+                <button type="button" id="btn-wa-disconnect" class="btn btn-danger">Desconectar Aparelho</button>
+              </div>
+            </div>
+
+            <!-- Barra de Status Atual -->
+            <div id="whatsapp-status-box" style="margin-bottom: 18px;"></div>
+
+            <!-- Status do bot automático (respostas, lembretes e avaliações) -->
+            <p id="wa-bot-state-hint" style="margin: -6px 0 16px; font-size: 12.5px; color: var(--text-secondary);"></p>
+
+            <!-- Grid Duplo: Opção 1 (QR Code) e Opção 2 (Número + 8 Dígitos) -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px;">
+              <!-- CARD 1: CONECTAR POR QR CODE -->
+              <div style="border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; background: var(--bg-elevated); display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
+                <div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px;">
+                    <strong style="display: inline-flex; align-items: center; gap: 6px; font-size: 15px; color: var(--text-primary);">
+                      <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg> Opção 1: Vincular por QR Code
+                    </strong>
+                    <span class="crm-stat-pill" style="font-size: 11px;">Câmera</span>
+                  </div>
+                  <p style="margin: 0 0 12px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.45;">
+                    No seu WhatsApp, acesse <strong>Aparelhos conectados &gt; Conectar um aparelho</strong> e aponte a câmera para o QR Code abaixo.
+                  </p>
+                </div>
+
+                <div id="wa-qr-display-area" style="min-height: 210px; background: #ffffff; border: 1px dashed var(--border-strong); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px; text-align: center;">
+                  <span style="font-size: 13px; color: var(--text-secondary);">Clique no botão abaixo para gerar o QR Code</span>
+                </div>
+
+                <button type="button" id="btn-wa-start" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                  Gerar QR Code
+                </button>
+              </div>
+
+              <!-- CARD 2: CONECTAR POR NÚMERO (CÓDIGO DE 8 DÍGITOS) -->
+              <div style="border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; background: var(--bg-elevated); display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
+                <div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px;">
+                    <strong style="display: inline-flex; align-items: center; gap: 6px; font-size: 15px; color: var(--text-primary);">
+                      <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></svg> Opção 2: Vincular pelo Número (8 Dígitos)
+                    </strong>
+                    <span class="crm-stat-pill" style="font-size: 11px;">Sem Câmera</span>
+                  </div>
+                  <p style="margin: 0 0 12px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.45;">
+                    No celular: <strong>Aparelhos conectados &gt; Conectar um aparelho &gt; Conectar com número de telefone</strong> e digite os <strong>8 dígitos</strong> gerados abaixo.
+                  </p>
+
+                  <form id="form-wa-pairing" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="field" style="margin: 0;">
+                      <label for="wa-pairing-phone" style="font-size: 12px;">Número do WhatsApp (com DDD ou 55+DDD)</label>
+                      <input
+                        id="wa-pairing-phone"
+                        type="tel"
+                        required
+                        placeholder="Ex: 5562982854050 ou 62982854050"
+                        style="height: 42px; font-size: 15px; font-weight: 700; letter-spacing: 0.03em;"
+                      >
+                    </div>
+                    <button type="submit" id="btn-wa-pairing-submit" class="btn btn-success" style="width: 100%; justify-content: center;">
+                      Gerar Código de 8 Dígitos
+                    </button>
+                  </form>
+                </div>
+
+                <div id="wa-pairing-display-area" style="min-height: 132px; background: #ffffff; border: 1px dashed var(--border-strong); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px; text-align: center;">
+                  <span style="font-size: 13px; color: var(--text-secondary);">Digite o número acima para exibir os 8 dígitos</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="surface-card">
+            <h3>Resumo do Fluxo Configurado</h3>
+            <div id="whatsapp-flow-preview"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: NOVO AGENDAMENTO MANUAL
+       ======================================================================== -->
+  <dialog id="dialog-manual-appt" closedby="any" aria-labelledby="dialog-appt-title">
+    <div class="dialog-header">
+      <h2 id="dialog-appt-title">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> Novo Agendamento
+      </h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-manual-appt" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <form id="form-manual-appt">
+      <div class="dialog-body">
+        <div class="field">
+          <label for="appt-customer-name">Nome do Cliente</label>
+          <input id="appt-customer-name" type="text" required autofocus placeholder="Ex: João Victor">
+        </div>
+        <div class="field">
+          <label for="appt-customer-phone">WhatsApp / Telefone</label>
+          <input id="appt-customer-phone" type="text" required placeholder="Ex: 5511999998888">
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="appt-service">Serviço (R$)</label>
+            <select id="appt-service" required></select>
+          </div>
+          <div class="field">
+            <label for="appt-barber">Profissional</label>
+            <select id="appt-barber" required></select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="appt-date">Data</label>
+            <input id="appt-date" type="date" required>
+          </div>
+          <div class="field">
+            <label for="appt-time">Horário</label>
+            <select id="appt-time" required></select>
+          </div>
+        </div>
+        <fieldset style="border: 1px solid var(--border-subtle); border-radius: 10px; padding: 10px 12px; margin: 0;">
+          <legend style="font-size: 12px; font-weight: 700; color: var(--text-secondary); padding: 0 6px;">Meio de Pagamento</legend>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; padding-top: 2px;">
+            <span style="display: inline-flex; align-items: center; gap: 6px;">
+              <input type="radio" id="appt-pay-pix" name="apptPaymentMethod" value="PIX" checked style="accent-color: var(--brand-primary); width: 17px; height: 17px;">
+              <label for="appt-pay-pix" style="font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> PIX
+              </label>
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;">
+              <input type="radio" id="appt-pay-card" name="apptPaymentMethod" value="Cartão" style="accent-color: var(--brand-primary); width: 17px; height: 17px;">
+              <label for="appt-pay-card" style="font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> Cartão
+              </label>
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;">
+              <input type="radio" id="appt-pay-cash" name="apptPaymentMethod" value="Dinheiro" style="accent-color: var(--brand-primary); width: 17px; height: 17px;">
+              <label for="appt-pay-cash" style="font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg> Dinheiro
+              </label>
+            </span>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="appt-notes">Observações (Opcional)</label>
+          <input id="appt-notes" type="text">
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn btn-secondary" data-close-dialog="dialog-manual-appt">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: AVALIAÇÕES DO CLIENTE
+       ======================================================================== -->
+  <dialog id="dialog-customer-evals" closedby="any" aria-labelledby="dialog-evals-title">
+    <div class="dialog-header">
+      <h2 id="dialog-evals-title">Avaliações do Cliente</h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-customer-evals" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="dialog-body" id="dialog-customer-evals-body"></div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-customer-evals">Fechar</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: CADASTRAR / EDITAR FUNCIONÁRIO
+       ======================================================================== -->
+  <dialog id="dialog-barber" closedby="any" aria-labelledby="dialog-barber-title">
+    <div class="dialog-header">
+      <h2 id="dialog-barber-title">Registrar Funcionário</h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-barber" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <form id="form-barber">
+      <input type="hidden" id="barber-id">
+      <div class="dialog-body">
+        <div class="field">
+          <label for="barber-name">Nome do Funcionário</label>
+          <input id="barber-name" type="text" required autofocus>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="barber-phone">Telefone</label>
+            <input id="barber-phone" type="text">
+          </div>
+          <div class="field">
+            <label for="barber-specialty">Especialidade</label>
+            <input id="barber-specialty" type="text" value="Barbeiro">
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="barber-start">Início do Expediente</label>
+            <input id="barber-start" type="time" value="08:00" required>
+          </div>
+          <div class="field">
+            <label for="barber-end">Fim do Expediente</label>
+            <input id="barber-end" type="time" value="19:00" required>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="barber-lunch-start">Início Almoço / Pausa</label>
+            <input id="barber-lunch-start" type="time" value="12:00">
+          </div>
+          <div class="field">
+            <label for="barber-lunch-end">Fim Almoço / Pausa</label>
+            <input id="barber-lunch-end" type="time" value="13:00">
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="barber-max-slot">Limite por Horário</label>
+            <input id="barber-max-slot" type="number" min="1" max="10" value="3" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="barber-active">Status</label>
+          <select id="barber-active">
+            <option value="true">Ativo</option>
+            <option value="false">Inativo</option>
+          </select>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn btn-secondary" data-close-dialog="dialog-barber">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: CADASTRAR / EDITAR PRODUTO OU SERVIÇO
+       ======================================================================== -->
+  <dialog id="dialog-service" closedby="any" aria-labelledby="dialog-service-title">
+    <div class="dialog-header">
+      <h2 id="dialog-service-title">Produto / Serviço</h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-service" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <form id="form-service">
+      <input type="hidden" id="service-id">
+      <div class="dialog-body">
+        <div class="field">
+          <label for="service-name">Nome</label>
+          <input id="service-name" type="text" required autofocus>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="service-price">Preço (R$)</label>
+            <input id="service-price" type="number" step="0.50" min="1" required>
+          </div>
+          <div class="field">
+            <label for="service-duration">Duração (Minutos)</label>
+            <select id="service-duration">
+              <option value="15">15 minutos</option>
+              <option value="20">20 minutos</option>
+              <option value="30">30 minutos</option>
+              <option value="40">40 minutos</option>
+              <option value="45">45 minutos</option>
+              <option value="60">1 hora</option>
+              <option value="75">1h15</option>
+              <option value="90">1h30</option>
+              <option value="120">2 horas</option>
+              <option value="150">2h30</option>
+              <option value="180">3 horas</option>
+              <option value="240">4 horas</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="service-color">Cor do Serviço</label>
+            <input id="service-color" type="color" value="#FF6B00" style="padding: 4px; height: 40px; width: 100%;">
+          </div>
+          <div class="field">
+            <label for="service-order">Ordem</label>
+            <input id="service-order" type="number" min="1" value="1" required>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn btn-secondary" data-close-dialog="dialog-service">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: CENTRAL DE NOTIFICAÇÕES (VISUAL, SONORA E APARELHO)
+       ======================================================================== -->
+  <dialog id="dialog-notifications" closedby="any" aria-labelledby="dialog-notif-title">
+    <div class="dialog-header">
+      <h2 id="dialog-notif-title">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg> Notificações &amp; Alertas
+      </h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-notifications" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; padding: 12px; border-radius: 10px; background: var(--bg-elevated); border: 1px solid var(--border-subtle);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+          <div>
+            <strong style="font-size: 13.5px; display: block;">Alerta Sonoro na Dashboard</strong>
+            <span style="font-size: 12px; color: var(--text-secondary);">Toca um aviso sonoro a cada novo agendamento ou avaliação</span>
+          </div>
+          <button type="button" id="btn-dialog-sound-toggle" class="btn btn-secondary" style="min-height: 36px; font-size: 12.5px;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg> Som Ativado
+          </button>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-subtle); padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+          <div>
+            <strong style="font-size: 13.5px; display: block;">Notificações no Aparelho / Celular</strong>
+            <span id="device-notif-status-text" style="font-size: 12px; color: var(--text-secondary);">Exibe alertas na barra de status do celular/computador</span>
+          </div>
+          <button type="button" id="btn-enable-device-notif" class="btn btn-primary" style="min-height: 36px; font-size: 12.5px;">
+            Ativar no Aparelho
+          </button>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-subtle); padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+          <span style="font-size: 12px; color: var(--text-secondary);">Testar som, alerta visual e notificação no celular:</span>
+          <button type="button" id="btn-test-notification" class="btn btn-success" style="min-height: 34px; font-size: 12.5px;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/><path d="M22 8c0-2.3-.8-4.3-2-6"/></svg> Disparar Teste Agora
+          </button>
+        </div>
+      </div>
+
+      <h3 style="margin: 0 0 10px; font-size: 14px;">Histórico Recente de Notificações</h3>
+      <div id="notifications-history-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;"></div>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-notifications">Fechar</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: INSTALAR APP NA TELA PRINCIPAL DO CELULAR (PWA)
+       ======================================================================== -->
+  <dialog id="dialog-pwa-install" closedby="any" aria-labelledby="dialog-pwa-title">
+    <div class="dialog-header">
+      <h2 id="dialog-pwa-title">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg> Instalar Clinic Hair no Celular
+      </h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-pwa-install" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding: 12px; border-radius: 12px; background: var(--bg-elevated); border: 1px solid var(--border-subtle);">
+        <img src="/icons/app-192.png" alt="Ícone Clinic Hair" width="56" height="56" style="border-radius: 12px; flex-shrink: 0; aspect-ratio: 1 / 1;">
+        <div>
+          <strong style="font-size: 15px; display: block;">Clinic Hair — App Rápido</strong>
+          <span style="font-size: 12.5px; color: var(--text-secondary);">Adicione na tela inicial do seu celular para abrir em tela cheia e receber notificações.</span>
+        </div>
+      </div>
+
+      <div id="pwa-direct-install-box" style="margin-bottom: 16px;" hidden>
+        <button type="button" id="btn-dialog-install-now" class="btn btn-primary" style="width: 100%; min-height: 44px; font-size: 14.5px;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Baixar e Adicionar à Tela Principal Agora
+        </button>
+      </div>
+      <p id="install-status" role="status" style="font-size: 12.5px; font-weight: 600; color: var(--status-success); margin: 0 0 12px;"></p>
+
+      <div style="display: grid; gap: 12px;">
+        <div style="padding: 12px 14px; border-radius: 10px; background: var(--bg-elevated); border: 1px solid var(--border-subtle);">
+          <strong style="font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16v6"/><path d="M19 16v6"/><path d="M8 18h8"/><path d="M7 10v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-7"/><path d="M18 9a6 6 0 0 0-12 0Z"/><path d="M9 5 7.5 2.5"/><path d="M15 5l1.5-2.5"/><circle cx="10" cy="8" r="0.8" fill="currentColor"/><circle cx="14" cy="8" r="0.8" fill="currentColor"/></svg> No Android (Chrome / Edge / Samsung)
+          </strong>
+          <ol style="margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.55;">
+            <li>Toque no botão <strong>Instalar App</strong> acima ou no menu <strong>⋮ (três pontos)</strong> do navegador.</li>
+            <li>Selecione <strong>Instalar aplicativo</strong> ou <strong>Adicionar à tela inicial</strong>.</li>
+          </ol>
+        </div>
+
+        <div style="padding: 12px 14px; border-radius: 10px; background: var(--bg-elevated); border: 1px solid var(--border-subtle);">
+          <strong style="font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.94c1.5 0 2.75-.81 4.12-.81 1.34 0 2.45.81 3.88.81 2.06 0 3.75-1.78 4.75-3.25-2.47-1.44-2.88-5.16-.31-6.72-1.34-1.94-3.41-2.16-4.13-2.16-1.75 0-3.19.97-4.12.97-.94 0-2.41-.94-3.91-.94-2.88 0-5.28 2.22-5.28 5.72 0 3.59 2.16 7.44 5 7.38z"/><path d="M15.5 3c-.19 1.47-1.12 2.66-2.5 2.81.19-1.47 1.25-2.66 2.5-2.81z"/></svg> No iPhone / iOS (Safari)
+          </strong>
+          <ol style="margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.55;">
+            <li>Toque no ícone <strong>Compartilhar</strong> (quadrado com seta para cima na barra inferior).</li>
+            <li>Role para baixo e toque em <strong>Adicionar à Tela de Início</strong>.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-pwa-install">Fechar</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: SUPERADMIN — CRIAR NOVA LOJA + PRÉ-CONFIGURAÇÃO
+       ======================================================================== -->
+  <dialog id="dialog-sa-create-store" closedby="any" aria-labelledby="dialog-sa-create-title">
+    <div class="dialog-header">
+      <h2 id="dialog-sa-create-title">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg> Criar Nova Loja + Entregar Pré-Configuração
+      </h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-sa-create-store" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <form id="form-sa-create-store">
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-new-store-name">Nome da Barbearia / Loja</label>
+            <input id="sa-new-store-name" type="text" required placeholder="Ex: Barbearia Imperial">
+          </div>
+          <div class="field">
+            <label for="sa-new-owner-phone">WhatsApp do Proprietário (Com DDD)</label>
+            <input id="sa-new-owner-phone" type="tel" required placeholder="Ex: 5562982854050">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-new-admin-user">Usuário Admin da Loja</label>
+            <input id="sa-new-admin-user" type="text" required placeholder="Ex: CarlosAdmin">
+          </div>
+          <div class="field">
+            <label for="sa-new-admin-pass">Senha de Acesso da Loja</label>
+            <input id="sa-new-admin-pass" type="text" required minlength="8" placeholder="Mínimo 8 caracteres, letras e números">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-new-barber-name">1º Profissional Pré-Configurado</label>
+            <input id="sa-new-barber-name" type="text" required placeholder="Ex: Carlos">
+          </div>
+          <div class="field">
+            <label for="sa-new-preset">Kit de Pré-Configuração Entregue</label>
+            <select id="sa-new-preset">
+              <option value="padrao">Kit Padrão Barbearia (Corte R$30, Barba R$30, Combo R$50, Sobrancelha R$15 + Enquetes)</option>
+              <option value="completo">Kit VIP Completo (+ Hidratação & Pigmentação + Enquetes)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-new-plan">Plano de Assinatura</label>
+            <select id="sa-new-plan">
+              <option value="PRO SaaS">PRO SaaS</option>
+              <option value="VIP Multi-Barber">VIP Multi-Barber</option>
+              <option value="Starter">Starter</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sa-new-fee">Mensalidade (R$)</label>
+            <input id="sa-new-fee" type="number" step="0.10" min="0" value="149.90" required>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-new-due">Próximo Vencimento</label>
+            <input id="sa-new-due" type="date" required>
+          </div>
+          <div class="field">
+            <label for="sa-new-hours">Expediente Inicial</label>
+            <div style="display: flex; gap: 6px;">
+              <input id="sa-new-open" type="time" value="08:00" required style="flex: 1;">
+              <input id="sa-new-close" type="time" value="19:00" required style="flex: 1;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn btn-secondary" data-close-dialog="dialog-sa-create-store">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Criar Loja & Entregar Pré-Config</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: SUPERADMIN — ENTREGAR PRÉ-CONFIGURAÇÃO PARA LOJA
+       ======================================================================== -->
+  <dialog id="dialog-sa-preconfig" closedby="any" aria-labelledby="dialog-sa-preconfig-title">
+    <div class="dialog-header">
+      <h2 id="dialog-sa-preconfig-title">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Entregar Pré-Configuração na Loja
+      </h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-sa-preconfig" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <form id="form-sa-preconfig">
+      <input type="hidden" id="sa-preconfig-store-id">
+      <div class="dialog-body">
+        <p id="sa-preconfig-store-label" style="margin: 0 0 12px; font-size: 13.5px; font-weight: 700; color: var(--brand-primary);"></p>
+
+        <div class="field">
+          <label for="sa-preconfig-preset">Pacote de Serviços & Enquetes</label>
+          <select id="sa-preconfig-preset">
+            <option value="padrao">Kit Padrão (Corte R$ 30, Barba R$ 30, Corte+Barba R$ 50, Sobrancelha R$ 15)</option>
+            <option value="completo">Kit VIP Completo (+ Hidratação R$ 35, Pigmentação R$ 25)</option>
+          </select>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; margin: 12px 0; padding: 12px; border-radius: 10px; background: var(--bg-elevated); border: 1px solid var(--border-subtle);">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">
+            <input type="checkbox" id="sa-preconfig-reset-services" checked style="width: 18px; height: 18px;">
+            Injetar / Atualizar Catálogo de Serviços e Preços
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">
+            <input type="checkbox" id="sa-preconfig-reset-polls" checked style="width: 18px; height: 18px;">
+            Configurar Textos das Enquetes do WhatsApp com o Nome da Loja
+          </label>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-preconfig-barber">Adicionar Profissional (Opcional)</label>
+            <input id="sa-preconfig-barber" type="text" placeholder="Deixe em branco para manter atuais">
+          </div>
+          <div class="field">
+            <label for="sa-preconfig-barber-phone">WhatsApp do Profissional</label>
+            <input id="sa-preconfig-barber-phone" type="tel" placeholder="Ex: 5562982854050">
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn btn-secondary" data-close-dialog="dialog-sa-preconfig">Cancelar</button>
+        <button type="submit" class="btn btn-primary">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Entregar Pré-Configuração Agora
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: SUPERADMIN — EDITAR LOJA / ASSINATURA / SENHA
+       ======================================================================== -->
+  <dialog id="dialog-sa-edit-store" closedby="any" aria-labelledby="dialog-sa-edit-title">
+    <div class="dialog-header">
+      <h2 id="dialog-sa-edit-title">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> Configurar Loja &amp; Assinatura
+      </h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-sa-edit-store" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <form id="form-sa-edit-store">
+      <input type="hidden" id="sa-edit-store-id">
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-edit-name">Nome da Loja</label>
+            <input id="sa-edit-name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="sa-edit-owner-phone">WhatsApp do Proprietário</label>
+            <input id="sa-edit-owner-phone" type="tel">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-edit-plan">Plano SaaS</label>
+            <select id="sa-edit-plan">
+              <option value="PRO SaaS">PRO SaaS</option>
+              <option value="VIP Multi-Barber">VIP Multi-Barber</option>
+              <option value="Starter">Starter</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sa-edit-fee">Mensalidade (R$)</label>
+            <input id="sa-edit-fee" type="number" step="0.10" min="0" required>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-edit-sub-status">Status da Assinatura</label>
+            <select id="sa-edit-sub-status">
+              <option value="Active">Ativa (Em dia)</option>
+              <option value="Pending">Pendente (Aguardando Pagamento)</option>
+              <option value="Suspended">Suspensa (Inadimplente)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sa-edit-due">Próximo Vencimento</label>
+            <input id="sa-edit-due" type="date" required>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-edit-active">Acesso ao Sistema</label>
+            <select id="sa-edit-active">
+              <option value="true">Loja Liberada (Ativa)</option>
+              <option value="false">Loja Bloqueada (Suspensa)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sa-edit-new-pass">Redefinir Senha do Admin (Opcional)</label>
+            <input id="sa-edit-new-pass" type="text" placeholder="Deixe vazio para não alterar">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="sa-edit-notes">Observações de Cobrança / Contrato</label>
+          <input id="sa-edit-notes" type="text">
+        </div>
+      </div>
+      <div class="dialog-footer" style="justify-content: space-between;">
+        <button type="button" id="btn-sa-delete-store" class="btn btn-danger">Excluir Loja</button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn btn-secondary" data-close-dialog="dialog-sa-edit-store">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL NATIVO <dialog>: SUPERADMIN — COBRAR ASSINATURA DE LOJA
+       ======================================================================== -->
+  <dialog id="dialog-sa-charge" closedby="any" aria-labelledby="dialog-sa-charge-title">
+    <div class="dialog-header">
+      <h2 id="dialog-sa-charge-title">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> Cobrar Assinatura da Loja
+      </h2>
+      <button type="button" class="btn btn-secondary" data-close-dialog="dialog-sa-charge" style="min-height: 32px; padding: 4px 10px;" aria-label="Fechar">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <form id="form-sa-charge">
+      <div class="dialog-body">
+        <div class="field">
+          <label for="sa-charge-store">Selecione a Loja</label>
+          <select id="sa-charge-store" required></select>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-charge-month">Mês de Referência</label>
+            <input id="sa-charge-month" type="text" required placeholder="Ex: 11/2026">
+          </div>
+          <div class="field">
+            <label for="sa-charge-amount">Valor da Cobrança (R$)</label>
+            <input id="sa-charge-amount" type="number" step="0.10" min="1" required value="149.90">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="sa-charge-due">Data de Vencimento</label>
+            <input id="sa-charge-due" type="date" required>
+          </div>
+          <div class="field">
+            <label for="sa-charge-method">Forma de Cobrança</label>
+            <select id="sa-charge-method">
+              <option value="PIX">PIX</option>
+              <option value="Boleto">Boleto Bancário</option>
+              <option value="Cartão Recorrente">Cartão Recorrente</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="sa-charge-pix">Chave PIX / Link de Pagamento / Mensagem</label>
+          <input id="sa-charge-pix" type="text" value="Chave PIX CNPJ / Celular — Envie o comprovante para liberação automática.">
+        </div>
+
+        <div style="margin-top: 8px; padding: 12px; border-radius: 10px; background: var(--bg-elevated); border: 1px solid var(--border-subtle);">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; cursor: pointer;">
+            <input type="checkbox" id="sa-charge-send-wa" checked style="width: 18px; height: 18px;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Enviar aviso de cobrança direto no WhatsApp do proprietário da loja
+          </label>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn btn-secondary" data-close-dialog="dialog-sa-charge">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Emitir Cobrança Agora</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Live Region para Leitores de Tela + Pilha de Toasts Popover Manual (modern-web-guidance) -->
+  <p class="visually-hidden">Alertas em tempo real da barbearia</p>
+  <div id="notification-live" class="visually-hidden" aria-live="assertive"></div>
+  <div id="toast-region" role="region" aria-label="Notificações" class="toast-stack"></div>
+  <div id="toast-banner" class="toast-banner" hidden></div>
+
+  <script src="/js/icons.js"></script>
+  <script src="/js/dashboard.js" defer></script>
+  <script src="/js/ext-ux.js" defer></script>
+  <script src="/js/ext-panel.js" defer></script>
+</body>
+</html>

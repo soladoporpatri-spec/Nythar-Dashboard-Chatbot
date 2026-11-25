@@ -1,0 +1,44 @@
+# Pipeline de integração contínua (item 85): compila, roda os testes e valida o JavaScript a cada push/PR.
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restaurar
+        run: dotnet restore ClinicHair.slnx
+      - name: Compilar
+        run: dotnet build ClinicHair.slnx --no-restore -c Release
+      - name: Testes (autorização, isolamento por loja, PIX, TOTP, disponibilidade)
+        run: dotnet test tests/ClinicHair.Tests/ClinicHair.Tests.csproj -c Release --logger "trx;LogFileName=results.trx"
+        env:
+          CLINICHAIR_DISABLE_WORKERS: '1'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: '**/TestResults/*.trx'
+
+  frontend-and-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe do painel
+        run: for f in src/ClinicHair.WebApi/wwwroot/js/*.js; do node --check "$f"; done
+      - name: Compilar o WhatsApp Bridge
+        working-directory: src/ClinicHair.WhatsAppBridge
+        run: |
+          npm ci
+          npm run build

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Agendar horário</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/app-192.png">
+  <link rel="stylesheet" href="/css/publico.css">
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="top">
+    <img id="logo" alt="" hidden>
+    <div>
+      <h1 id="store-name">Carregando…</h1>
+      <p id="store-info" class="muted"></p>
+    </div>
+  </header>
+
+  <main id="conteudo" tabindex="-1">
+    <!-- Página da loja: planos + agendamento -->
+    <section id="view-store" hidden>
+      <section id="booking" class="card" hidden>
+        <h2>Agendar horário</h2>
+        <form id="book-form" novalidate>
+          <label>Serviço<select id="b-service" required></select></label>
+          <label>Profissional<select id="b-barber"><option value="0">Qualquer um</option></select></label>
+          <label>Dia<input type="date" id="b-date" required></label>
+          <div>
+            <span class="label">Horário</span>
+            <div id="b-slots" class="slots" role="radiogroup" aria-label="Horários disponíveis"><p class="muted">Escolha serviço e dia.</p></div>
+          </div>
+          <label>Seu nome<input id="b-name" autocomplete="name" maxlength="80" required></label>
+          <label>Seu WhatsApp (com DDD)<input id="b-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" required></label>
+          <label class="hp" aria-hidden="true">Site<input id="b-website" tabindex="-1" autocomplete="off"></label>
+          <p class="muted small">Assinantes podem agendar com mais antecedência usando o WhatsApp cadastrado.</p>
+          <button type="submit" class="btn">Confirmar agendamento</button>
+          <p id="book-msg" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="plans-wrap" class="card" hidden>
+        <h2>Planos de assinatura</h2>
+        <div id="plans" class="plans"></div>
+        <p class="muted small">Para assinar, fale com a equipe no balcão ou pelo WhatsApp.</p>
+      </section>
+    </section>
+
+    <!-- Onboarding self-service de novas barbearias -->
+    <section id="view-signup" class="card" hidden>
+      <h2>Cadastre sua barbearia</h2>
+      <p class="muted">Agenda online, bot de WhatsApp, planos de assinatura e relatórios. Nossa equipe confere os dados e envia o acesso pelo WhatsApp.</p>
+      <form id="signup-form" novalidate>
+        <label>Nome da barbearia<input id="s-store" maxlength="120" required></label>
+        <label>Seu nome<input id="s-owner" maxlength="80" autocomplete="name" required></label>
+        <label>Seu WhatsApp (com DDD)<input id="s-phone" type="tel" inputmode="tel" autocomplete="tel" required></label>
+        <label>Cidade<input id="s-city" maxlength="60"></label>
+        <label>Plano<select id="s-plan"><option>Plano Básico</option><option selected>Plano Pro WhatsApp</option><option>Plano Premium</option></select></label>
+        <label class="hp" aria-hidden="true">Site<input id="s-website" tabindex="-1" autocomplete="off"></label>
+        <button type="submit" class="btn">Enviar pedido</button>
+        <p id="signup-msg" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="view-missing" class="card" hidden>
+      <h2>Página não encontrada</h2>
+      <p class="muted">Confira o endereço com a barbearia.</p>
+    </section>
+  </main>
+  <script src="/js/publico.js" defer></script>
+</body>
+</html>
